@@ -69,7 +69,7 @@ function animate(){
     
     
   
-    for(let i=0; i<chars.length;i++){
+    for(let i=0; i<chars.length; i++){
         ctx.beginPath()
         chars[i].drawBall();
         chars[i].moveXY();
@@ -80,12 +80,8 @@ function animate(){
             if(chars[i].ballLife() > Math.ceil(Math.random()*(1000-800)+800)){
                 chars.splice(i,1)
             }            
-        }        
-        // if(charSymbols.length != chars.length){
-        //     charSymbols.push(chars[i].charactor)
-        // }                            
-    }
-    
+        }                                  
+    }    
   
 
     if(!stopGame){
