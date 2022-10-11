@@ -1,0 +1,34 @@
+body{
+    width: 95vw;
+    background-color: rgb(44, 44, 44)
+}
+
+#canvas{
+    border: 5px solid white;
+    border-radius: 3px;
+    
+}
+
+#gameSection{
+    display: flex;
+    justify-content: center;
+}
+
+h2{
+    text-align: center;
+}
+
+#play{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 20px;
+   
+}
+
+#play button{
+    margin: 10px;
+    background-color:azure;
+    border-radius: 5px;
+    padding: 10px;
+}
