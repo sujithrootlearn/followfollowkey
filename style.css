@@ -66,3 +66,37 @@ h2{
     font-weight: bold;
     border: 3px solid white;
 }
+
+@media screen and (max-width:680px){
+    #canvas{
+        width: 475px;
+    }
+    #play button{
+        margin: 5px;;
+        padding: 12px;
+        font-size: 11px;
+    }
+    h2{
+        padding: 3px 25px;
+        font-size: 21px;
+    }
+    #btnStop{
+        padding: 6px;
+        font-size: x-small;
+    }
+}
+@media screen and (max-width:605px){
+    #canvas{
+        width: 440px;
+    }
+    #play button{
+        margin: 2px;;
+        padding: 5px;
+        font-size: 9px;
+    }
+    h2{
+        padding: 2px 20px;
+        font-size: 16px;
+    }
+    
+}
