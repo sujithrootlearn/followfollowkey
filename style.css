@@ -1,11 +1,14 @@
+
+
 body{
     width: 95vw;
-    background-color: rgb(44, 44, 44)
+    background-color: rgb(44, 44, 44);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #canvas{
-    border: 5px solid white;
-    border-radius: 3px;
+    border: 1px dotted pink;
+    border-radius: 4px;
     
 }
 
@@ -16,6 +19,20 @@ body{
 
 h2{
     text-align: center;
+    background-color: lightcyan;
+    color: black;
+    border-radius: 6px;
+    padding: 10px 40px;    
+    border: 1px solid pink;
+}
+
+.mark{
+    color: rgb(104, 41, 167);
+}
+
+.dot{
+    color: rgb(233, 15, 15);
+    font-size: 24px;
 }
 
 #play{
@@ -28,10 +45,11 @@ h2{
 
 #play button{
     margin: 8px;
-    background-color:azure;
+    background-color:rgb(246, 246, 193);
     border-radius: 5px;
-    padding: 10px;
+    padding: 19px;
     font-weight: bold;
+    border: 3px solid gold;
 }
 
 #canvasSection{
@@ -42,8 +60,9 @@ h2{
 
 #btnStop{    
     margin-top: 15px;
-    padding: 7px;
-    background-color: lightcyan;
+    padding: 10px;
+    background-color: rgb(251, 169, 182);
     border-radius: 4px;
     font-weight: bold;
+    border: 3px solid white;
 }

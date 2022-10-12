@@ -1,12 +1,14 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext("2d");
-canvas.width = 600, canvas.height = 700;
+canvas.width = 500, canvas.height = 760;
 let ballXCord = 100, ballYCord = 100; radius = 25; circleFillColor = "rgba(255,255,255)", textColor = "black";
 let requestAnimationID=0, stopGame=true;
+let begginerBtn = document.getElementById('begginerBtn');
+let expertBtn = document.getElementById('expertBtn');
 let btnStop = document.getElementById('btnStop');
 let hideObject = false;
 let keyboardChars = ['-','_','+',"=",'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7'];
-let chars = [], charSymbols = [], counter=0, colorChangeCounter = 100, killObjCounter = 300, gameLevel = 60;
+let chars = [], charSymbols = [], counter=0, colorChangeCounter = 100, killObjCounter = 300, gameLevel = 49;
 
 class Ball{
     constructor(charactor){
@@ -84,7 +86,7 @@ function animate(){
     }    
   
 
-    if(!stopGame){
+    if(stopGame){
         cancelAnimationFrame(requestAnimationID);
     };
 
@@ -102,7 +104,18 @@ animate()
 //control section
 window.addEventListener('load',()=>{
     btnStop.addEventListener('click',()=>{
-        stopGame = false;              
+        stopGame = true;                     
+    });
+    begginerBtn.addEventListener('click',()=>{
+        if(stopGame===true){
+            stopGame = false;
+            gameLevel = 50;
+            begginerBtn.style.display= "none";
+            expertBtn.style.display = "none";
+            canvas.width = 670;
+            canvas.height = 760;
+            animate();            
+        }        
     });
     document.addEventListener('keydown', (evt)=>{
         for(let i=0; i<chars.length;i++){
