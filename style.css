@@ -7,7 +7,7 @@ body{
 }
 
 #canvas{
-    border: 1px dotted pink;
+    border: 2px dotted pink;
     border-radius: 4px;
     
 }
@@ -15,8 +15,10 @@ body{
 #gameSection{    
     display: flex;
     justify-content: center;
-    /* border: 1px solid white;
-    display: grid;
+    /* border: 2px solid whitesmoke;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px; */
+    /* display: grid;
     grid-template-columns: 200px 500px; */
 }
 
@@ -46,7 +48,7 @@ h5{
     text-align: end;
 }
 
-#play{
+/* #play{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -61,7 +63,8 @@ h5{
     border-bottom-right-radius: 12px;
     padding: 19px;
     font-weight: bold;  
-}
+} */
+
 button{
     border: 3px solid gold;
     transition: all 0.2s;

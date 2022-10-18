@@ -13,10 +13,10 @@ let lostCharMuzik = new Audio("./sounds/loose.mp3"), successMuzik = new Audio(".
 let gameoverMuzik = new Audio("./sounds/gameover.wav"), gameoverImage = new Image();
 gameoverImage.src = ("./images/gameover.png")
 let gameMusic = new Audio("./sounds/uhhoo.mp3");
-let keyboardChars = ['-','_','+',"=",'`','~','@','#','$','%','^','&','*','(',')','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7'];
+let keyboardChars = ['-','_','+',"=",'`','~','@','#','$','%','^','&','*','(',')','A','B','C','D','E','F','G','H','I','j','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7'];
 let uniqueCharacters = [], charSymbols = [], allKeys = [], colorChangeCounter = 100, killObjCounter = 300, missCount= 0;
-let counter=0, objBall, gameLevel=60,  theScore = 0;
-
+let counter=0, objBall, theScore = 0, allChars = [], strikeResult = [], maxMissCount = 10; buttonWidth=200, buttonHeight=46;
+let  gameLevel=60, playBeginner = 65, playExpert = 55;
 
 //class definition
 class Ball{
@@ -63,6 +63,75 @@ class Ball{
     }
 }
 
+function sortDesc(arr){
+    arr.sort((elemLeft, elemRight)=>{
+        if(elemLeft.missed > elemRight.missed){
+            return -1;
+        }else if(elemLeft.missed < elemRight.missed){
+            return 1;
+        }else{
+            return 0;
+        };
+    });
+}
+
+function displayStats(arr){
+    let theKey = "", xCord=canvas.width/2-212, yCord=canvas.height/2+252;
+    if(arr[0].missed > 0){
+        // ctx.fillStyle = "rgba(255,255,255)";
+        // ctx.fillRect(canvas.width/2-175, canvas.height/2+200, 350,55);
+        ctx.fillStyle = "white";
+        ctx.font = "18px Comic Sans MS";
+        ctx.fillText("Hey...Following key/keys are missed more the once:",canvas.width/2-199, canvas.height/2+225);
+        for(let k=0; k<arr.length; k++){
+            if(arr[k].missed > 0){
+                theKey = arr[k].key;               
+                xCord = xCord+16
+                ctx.fillText(`${theKey},` ,xCord, yCord);
+            }
+        }
+    }
+}
+
+//working
+
+function showGameStartButton(){
+    let rect1X = 40, rect1Y = 10, rect2X = buttonWidth+60, rect2Y = 10;
+    ctx.fillStyle = "white";
+    ctx.fillRect(rect1X, rect1Y, buttonWidth,buttonHeight);
+    
+    ctx.fillRect(rect2X, rect2Y, buttonWidth,buttonHeight);
+    ctx.fillStyle = "black";
+    ctx.font = "27px Comic Sans MS";
+    ctx.fillText("Play Beginner",rect1X+20, rect1Y+30);
+    ctx.fillText("Play Expert",rect2X+25, rect2Y+30);
+    canvas.addEventListener('click',(evt)=>{
+        let mouseClickX = evt.offsetX, mouseClickY = evt.offsetY;
+        // console.log(evt.offsetX ,canvas.width/2-buttonWidth/2,  evt.offsetY ,canvas.height/2-buttonHeight)
+        if(mouseClickX >= rect1X && mouseClickX <= rect1X+buttonWidth){
+            if(mouseClickY >= rect1Y && mouseClickY <= rect1Y+buttonHeight){
+                stopGame = false;
+                gameLevel = playBeginner;
+                allKeys = [];
+                animate();
+            };
+        }else if(mouseClickX >= rect2X && mouseClickX <= rect2X+buttonWidth){
+            if(mouseClickY >= rect2Y && mouseClickY <= rect2Y+buttonHeight){
+                stopGame = false;
+                gameLevel = playExpert;
+                allKeys = [];
+                animate();
+            }
+        }
+
+    })
+}
+
+//
+
+begginerBtn.style.display= "none";
+expertBtn.style.display = "none";
+
 
 //animation logic---------------------------------------------
 function animate(){
@@ -70,27 +139,51 @@ function animate(){
     requestAnimationID = requestAnimationFrame(animate);
 
     while(allKeys.length < (keyboardChars.length - gameLevel)){
-        objBall = new Ball(keyboardChars[Math.floor(Math.random()*(keyboardChars.length))]); 
-        allKeys.push(objBall);                                    
-    }    
-    uniqueCharacters = [... new Map(allKeys.map((item)=> [item["charactor"], item])).values()];   
+        objBall = new Ball(keyboardChars[Math.floor(Math.random()*(keyboardChars.length))]);
+        allKeys.push(objBall);                          
+    }; 
+    allKeys = [... new Map(allKeys.map((item)=> [item["charactor"], item])).values()];    
+        
   
-    for(let i=0; i<uniqueCharacters.length; i++){
+    for(let i=0; i<allKeys.length; i++){
         ctx.beginPath()
-        uniqueCharacters[i].drawBall();
-        uniqueCharacters[i].moveXY();
+        allKeys[i].drawBall();
+        allKeys[i].moveXY();
 
-        if(uniqueCharacters[i].ballLife() > Math.ceil(Math.random()*(600-100)+100)){
-            uniqueCharacters[i].circleFillColor = "rgba(255,0,0,0.7)";
-            uniqueCharacters[i].textColor = "white";
-            if(uniqueCharacters[i].ballLife() > Math.ceil(Math.random()*(1000-800)+800)){
+        if(allKeys[i].ballLife() > Math.ceil(Math.random()*(600-100)+100)){
+            allKeys[i].circleFillColor = "rgba(255,0,0,0.7)";
+            allKeys[i].textColor = "white";
+            if(allKeys[i].ballLife() > Math.ceil(Math.random()*(1000-800)+800)){ 
+
+                if(strikeResult.length > 0){
+                    let theKey = allKeys[i].charactor;
+                    let keyValueAlter = false;
+                    for(let j=0; j<strikeResult.length; j++){
+                        if(strikeResult[j].key === theKey){
+                            strikeResult[j].missed += 1;
+                            keyValueAlter = true;
+                        };
+                    };
+                    if(!keyValueAlter){
+                        strikeResult.push( {key: theKey, missed: 1} );
+                    };
+                }else{
+                    let theKey = allKeys[i].charactor;
+                    strikeResult.push( {key: theKey, missed: 1} );
+                };
+                
+                
+
+
                 allKeys.splice(i,1);
                 missCount = missCount+1;
                 miss.innerText = missCount;
-                if(missCount === 30){
+                if(missCount === maxMissCount){
                     stopGame = true;
-                    gameoverMuzik.play();
-                    ctx.drawImage(gameoverImage, canvas.width/2-gameoverImage.width/2,canvas.height/2-gameoverImage.height/2)
+                    
+                    
+                    sortDesc(strikeResult);                    
+                    console.log(strikeResult)
                 }else{
                     lostCharMuzik.play();
                 };                
@@ -101,17 +194,24 @@ function animate(){
             };            
         };                                  
     }; 
-
-    if(stopGame){
+    
+    if(stopGame){        
+        if(missCount === maxMissCount){
+            displayStats(strikeResult);
+        }
+        showGameStartButton();
         cancelAnimationFrame(requestAnimationID);
-        gameMusic.pause();
+        if(missCount === maxMissCount){
+            ctx.drawImage(gameoverImage, canvas.width/2-gameoverImage.width/2,canvas.height/2-gameoverImage.height/2);
+            gameoverMuzik.play();
+        };        
+        gameMusic.pause();        
     }else{
         gameMusic.play();
     }
-   
+  
 }
 animate()
-
 
 
 
@@ -119,7 +219,11 @@ animate()
 //control section-------------------------------------------
 window.addEventListener('load',()=>{
     btnStop.addEventListener('click',()=>{
-        stopGame = true;                     
+        stopGame = true;
+        location.reload();
+        if(!stopGame){
+            
+        };                                   
     });
     begginerBtn.addEventListener('click',()=>{
         if(stopGame===true){
@@ -128,20 +232,35 @@ window.addEventListener('load',()=>{
             expertBtn.style.display = "none";
             canvas.width = 670;
             canvas.height = 760;
-            gameLevel = 66;
+            gameLevel = 67;
             uniqueCharacters = [];
+            allKeys = [];
             animate();            
-        }        
+        };        
     });
-    document.addEventListener('keydown', (evt)=>{
-        for(let i=0; i<uniqueCharacters.length;i++){
-            if(uniqueCharacters[i].charactor === evt.key){                                
-                    allKeys.splice(i,1);           
-                    successMuzik.play();                
-                    theScore = theScore+1;
-                    score.innerText = theScore;         
-                              
+    expertBtn.addEventListener('click', ()=>{
+        if(stopGame===true){
+            stopGame = false;            
+            begginerBtn.style.display= "none";
+            expertBtn.style.display = "none";
+            canvas.width = 670;
+            canvas.height = 760;
+            gameLevel = 60;
+            uniqueCharacters = [];
+            allKeys = [];
+            animate();            
+        };    
+    });
+    document.addEventListener('keydown', (evt)=>{    
+        for(let i=0; i<allKeys.length;i++){
+            if(allKeys[i].charactor === evt.key){                    
+                allKeys.splice(i,1);
+                theScore = theScore+1; 
+                score.innerText = theScore;                                                
+                successMuzik.play();                               
             };           
-        };              
+        };             
     });
-})
+    
+});
+
