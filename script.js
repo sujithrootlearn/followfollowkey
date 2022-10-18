@@ -5,8 +5,8 @@ let ballXCord = 100, ballYCord = 100; radius = 25; circleFillColor = "rgba(255,2
 let requestAnimationID=0, stopGame=true;
 let score = document.getElementById('score');
 let miss = document.getElementById('miss');
-let begginerBtn = document.getElementById('begginerBtn');
-let expertBtn = document.getElementById('expertBtn');
+// let begginerBtn = document.getElementById('begginerBtn');
+// let expertBtn = document.getElementById('expertBtn');
 let btnStop = document.getElementById('btnStop');
 // let hideObject = false;
 let lostCharMuzik = new Audio("./sounds/loose.mp3"), successMuzik = new Audio("./sounds/success.wav");
@@ -16,7 +16,7 @@ let gameMusic = new Audio("./sounds/uhhoo.mp3");
 let keyboardChars = ['-','_','+',"=",'`','~','@','#','$','%','^','&','*','(',')','A','B','C','D','E','F','G','H','I','j','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7'];
 let uniqueCharacters = [], charSymbols = [], allKeys = [], colorChangeCounter = 100, killObjCounter = 300, missCount= 0;
 let counter=0, objBall, theScore = 0, allChars = [], strikeResult = [], maxMissCount = 10; buttonWidth=200, buttonHeight=46;
-let  gameLevel=60, playBeginner = 65, playExpert = 55;
+let  gameLevel=60, playBeginner = 65, playExpert = 55, gameover = false, maxBeginnerScore = 10, maxExpertScore = 20;
 
 //class definition
 class Ball{
@@ -25,8 +25,8 @@ class Ball{
         this.textColor = textColor;
         this.counter = counter;
         this.radius = radius;
-        this.ballXCord = Math.ceil(Math.random()*(500-100)+75)
-        this.ballYCord = Math.ceil(Math.random()*(600-100)+75)
+        this.ballXCord = Math.ceil(Math.random()*((canvas.width-50)-100)+100)
+        this.ballYCord = Math.ceil(Math.random()*((canvas.height-50)-100)+100)
         this.ctx = ctx;        
         this.speeds = [-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3, 0.3,0.4,0.5,0.6,0.7,0.8,0.9,1];
         this.dx = this.speeds[Math.floor(Math.random()*(this.speeds.length-1) )];
@@ -76,42 +76,49 @@ function sortDesc(arr){
 }
 
 function displayStats(arr){
-    let theKey = "", xCord=canvas.width/2-212, yCord=canvas.height/2+252;
-    if(arr[0].missed > 0){
+    let theKey = "", xCord=canvas.width/2-242, yCord=canvas.height/2+258;
+    if(arr.length > 0){
         // ctx.fillStyle = "rgba(255,255,255)";
         // ctx.fillRect(canvas.width/2-175, canvas.height/2+200, 350,55);
         ctx.fillStyle = "white";
-        ctx.font = "18px Comic Sans MS";
-        ctx.fillText("Hey...Following key/keys are missed more the once:",canvas.width/2-199, canvas.height/2+225);
+        ctx.font = "20px Comic Sans MS";
+        ctx.fillText("Hey...Following key/keys are missed more the once:",canvas.width/2-224, canvas.height/2+225);
         for(let k=0; k<arr.length; k++){
             if(arr[k].missed > 0){
                 theKey = arr[k].key;               
-                xCord = xCord+16
-                ctx.fillText(`${theKey},` ,xCord, yCord);
+                xCord = xCord+20
+                ctx.font = "18px Comic Sans MS";
+                ctx.fillText(`${theKey},` ,xCord,yCord);
             }
         }
+    }else{
+        ctx.shadowOffsetY = 0;
+        ctx.fillStyle = "white";
+        ctx.font = "23px Comic Sans MS";
+        ctx.fillText("Welldone !  You hit max score with no key miss.",canvas.width/2-250, canvas.height/2+210);
     }
 }
-
-//working
 
 function showGameStartButton(){
     let rect1X = 40, rect1Y = 10, rect2X = buttonWidth+60, rect2Y = 10;
     ctx.fillStyle = "white";
-    ctx.fillRect(rect1X, rect1Y, buttonWidth,buttonHeight);
-    
-    ctx.fillRect(rect2X, rect2Y, buttonWidth,buttonHeight);
+    ctx.shadowColor = "white";
+    ctx.shadowOffsetY = 3;
+    ctx.shadowBlur = 9;    
+    ctx.fillRect(rect1X, rect1Y, buttonWidth,buttonHeight);    
+    ctx.fillRect(rect2X, rect2Y, buttonWidth,buttonHeight);   
     ctx.fillStyle = "black";
     ctx.font = "27px Comic Sans MS";
     ctx.fillText("Play Beginner",rect1X+20, rect1Y+30);
     ctx.fillText("Play Expert",rect2X+25, rect2Y+30);
     canvas.addEventListener('click',(evt)=>{
-        let mouseClickX = evt.offsetX, mouseClickY = evt.offsetY;
-        // console.log(evt.offsetX ,canvas.width/2-buttonWidth/2,  evt.offsetY ,canvas.height/2-buttonHeight)
+        let mouseClickX = evt.offsetX, mouseClickY = evt.offsetY;        
         if(mouseClickX >= rect1X && mouseClickX <= rect1X+buttonWidth){
             if(mouseClickY >= rect1Y && mouseClickY <= rect1Y+buttonHeight){
                 stopGame = false;
                 gameLevel = playBeginner;
+                canvas.width = 610;
+                canvas.height = 840;
                 allKeys = [];
                 animate();
             };
@@ -119,6 +126,8 @@ function showGameStartButton(){
             if(mouseClickY >= rect2Y && mouseClickY <= rect2Y+buttonHeight){
                 stopGame = false;
                 gameLevel = playExpert;
+                canvas.width = 610;
+                canvas.height = 840;
                 allKeys = [];
                 animate();
             }
@@ -127,24 +136,22 @@ function showGameStartButton(){
     })
 }
 
-//
 
-begginerBtn.style.display= "none";
-expertBtn.style.display = "none";
 
 
 //animation logic---------------------------------------------
 function animate(){
     ctx.clearRect(0,0, canvas.width, canvas.height);
+    if(missCount != maxMissCount || theScore != 100){
     requestAnimationID = requestAnimationFrame(animate);
-
+    };
     while(allKeys.length < (keyboardChars.length - gameLevel)){
         objBall = new Ball(keyboardChars[Math.floor(Math.random()*(keyboardChars.length))]);
         allKeys.push(objBall);                          
     }; 
-    allKeys = [... new Map(allKeys.map((item)=> [item["charactor"], item])).values()];    
-        
-  
+    allKeys = [... new Map(allKeys.map((item)=> [item["charactor"], item])).values()];   
+    
+     
     for(let i=0; i<allKeys.length; i++){
         ctx.beginPath()
         allKeys[i].drawBall();
@@ -171,19 +178,14 @@ function animate(){
                     let theKey = allKeys[i].charactor;
                     strikeResult.push( {key: theKey, missed: 1} );
                 };
-                
-                
-
 
                 allKeys.splice(i,1);
                 missCount = missCount+1;
                 miss.innerText = missCount;
-                if(missCount === maxMissCount){
+                if(missCount >= maxMissCount){
                     stopGame = true;
-                    
-                    
-                    sortDesc(strikeResult);                    
-                    console.log(strikeResult)
+                    gameover = true;
+                    sortDesc(strikeResult);                 
                 }else{
                     lostCharMuzik.play();
                 };                
@@ -192,26 +194,41 @@ function animate(){
                     score.innerText = theScore;                    
                 };
             };            
-        };                                  
+        };
+        
+        //working
+        if(theScore >= 10){
+
+            stopGame = true
+            
+        };
+        //------                                 
     }; 
-    
-    if(stopGame){        
-        if(missCount === maxMissCount){
-            displayStats(strikeResult);
-        }
-        showGameStartButton();
+
+      
+    if(stopGame){     
+        if(!gameover){
+            showGameStartButton();
+        };
         cancelAnimationFrame(requestAnimationID);
-        if(missCount === maxMissCount){
+        
+        if(missCount >= maxMissCount){
+            ctx.fillStyle = "rgba(0,0,0,0.6)";
+            ctx.fillRect(0,0, canvas.width,canvas.height)
+            displayStats(strikeResult);          
             ctx.drawImage(gameoverImage, canvas.width/2-gameoverImage.width/2,canvas.height/2-gameoverImage.height/2);
-            gameoverMuzik.play();
-        };        
+            gameoverMuzik.play();            
+        } else if(theScore === 10){
+            displayStats(strikeResult);
+        }        
         gameMusic.pause();        
     }else{
         gameMusic.play();
     }
   
-}
+};
 animate()
+
 
 
 
@@ -225,32 +242,34 @@ window.addEventListener('load',()=>{
             
         };                                   
     });
-    begginerBtn.addEventListener('click',()=>{
-        if(stopGame===true){
-            stopGame = false;            
-            begginerBtn.style.display= "none";
-            expertBtn.style.display = "none";
-            canvas.width = 670;
-            canvas.height = 760;
-            gameLevel = 67;
-            uniqueCharacters = [];
-            allKeys = [];
-            animate();            
-        };        
-    });
-    expertBtn.addEventListener('click', ()=>{
-        if(stopGame===true){
-            stopGame = false;            
-            begginerBtn.style.display= "none";
-            expertBtn.style.display = "none";
-            canvas.width = 670;
-            canvas.height = 760;
-            gameLevel = 60;
-            uniqueCharacters = [];
-            allKeys = [];
-            animate();            
-        };    
-    });
+    // begginerBtn.addEventListener('click',()=>{
+    //     if(stopGame===true){
+    //         stopGame = false;            
+    //         begginerBtn.style.display= "none";
+    //         expertBtn.style.display = "none";
+    //         canvas.width = 670;
+    //         canvas.height = 760;
+    //         gameLevel = 67;
+    //         uniqueCharacters = [];
+    //         allKeys = [];
+    //         animate();            
+    //     };        
+    // });
+    // expertBtn.addEventListener('click', ()=>{
+    //     if(stopGame===true){
+    //         stopGame = false;            
+    //         begginerBtn.style.display= "none";
+    //         expertBtn.style.display = "none";
+    //         canvas.width = 670;
+    //         canvas.height = 760;
+    //         gameLevel = 60;
+    //         uniqueCharacters = [];
+    //         allKeys = [];
+    //         animate();            
+    //     };    
+    // });
+
+
     document.addEventListener('keydown', (evt)=>{    
         for(let i=0; i<allKeys.length;i++){
             if(allKeys[i].charactor === evt.key){                    
