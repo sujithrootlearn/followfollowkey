@@ -24,14 +24,17 @@ body{
 }
 
 h1{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    font-weight: 100;
     text-align: center;
     background-color: lightcyan;
     color: black;
     border-top-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    padding: 5px 35px;    
+    padding: 12px 28px;    
     border: 1px solid pink;
-    margin: 25px 0 35px;
+    margin: 25px 0 38px;
 }
 
 .mark{
@@ -45,11 +48,14 @@ h1{
 
 h5{
     font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
     color: white;
-    margin: 0 0 2px;
+    margin: 0 0 5px;
     width: 470px;
     text-align: end;
 }
+
+
 
 /* #play{
     display: flex;

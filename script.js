@@ -5,10 +5,9 @@ let ballXCord = 100, ballYCord = 100; radius = 25; circleFillColor = "rgba(255,2
 let requestAnimationID=0, stopGame=true;
 let score = document.getElementById('score');
 let miss = document.getElementById('miss');
-// let begginerBtn = document.getElementById('begginerBtn');
-// let expertBtn = document.getElementById('expertBtn');
+
 let btnStop = document.getElementById('btnStop');
-// let hideObject = false;
+
 let lostCharMuzik = new Audio("./sounds/loose.mp3"), successMuzik = new Audio("./sounds/success.wav");
 let gameoverMuzik = new Audio("./sounds/gameover.wav"), gameoverImage = new Image();
 gameoverImage.src = ("./images/gameover.png")
@@ -75,11 +74,10 @@ function sortDesc(arr){
     });
 }
 
-function displayStats(arr){
+function displayStats(arr){    
     let theKey = "", xCord=canvas.width/2-242, yCord=canvas.height/2+258;
     if(arr.length > 0){
-        // ctx.fillStyle = "rgba(255,255,255)";
-        // ctx.fillRect(canvas.width/2-175, canvas.height/2+200, 350,55);
+        
         ctx.fillStyle = "white";
         ctx.font = "20px Comic Sans MS";
         ctx.fillText("Hey...Following key/keys are missed more the once:",canvas.width/2-224, canvas.height/2+225);
@@ -94,10 +92,11 @@ function displayStats(arr){
     }else{
         ctx.shadowOffsetY = 0;
         ctx.fillStyle = "white";
-        ctx.font = "23px Comic Sans MS";
-        ctx.fillText("Welldone !  You hit max score with no key miss.",canvas.width/2-250, canvas.height/2+210);
+        ctx.font = "24px Comic Sans MS";
+        ctx.fillText("Welldone !  You hit max score with no key miss.",canvas.width/2-250, canvas.height/2);
     }
 }
+
 
 function showGameStartButton(){
     let rect1X = 40, rect1Y = 10, rect2X = buttonWidth+60, rect2Y = 10;
@@ -117,8 +116,8 @@ function showGameStartButton(){
             if(mouseClickY >= rect1Y && mouseClickY <= rect1Y+buttonHeight){
                 stopGame = false;
                 gameLevel = playBeginner;
-                canvas.width = 610;
-                canvas.height = 840;
+                canvas.width = 600;
+                canvas.height = 780;
                 allKeys = [];
                 animate();
             };
@@ -126,8 +125,8 @@ function showGameStartButton(){
             if(mouseClickY >= rect2Y && mouseClickY <= rect2Y+buttonHeight){
                 stopGame = false;
                 gameLevel = playExpert;
-                canvas.width = 610;
-                canvas.height = 840;
+                canvas.width = 600;
+                canvas.height = 780;
                 allKeys = [];
                 animate();
             }
@@ -194,31 +193,28 @@ function animate(){
                     score.innerText = theScore;                    
                 };
             };            
-        };
-        
-        //working
+        };        
         if(theScore >= 10){
-
-            stopGame = true
-            
+            stopGame = true            
         };
-        //------                                 
+                                         
     }; 
 
       
-    if(stopGame){     
-        if(!gameover){
+    if(stopGame){    
+        if(!gameover && theScore === 0){
             showGameStartButton();
         };
         cancelAnimationFrame(requestAnimationID);
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
         
-        if(missCount >= maxMissCount){
-            ctx.fillStyle = "rgba(0,0,0,0.6)";
-            ctx.fillRect(0,0, canvas.width,canvas.height)
+        if(missCount >= maxMissCount){            
+            ctx.fillRect(0,0, canvas.width,canvas.height);
             displayStats(strikeResult);          
             ctx.drawImage(gameoverImage, canvas.width/2-gameoverImage.width/2,canvas.height/2-gameoverImage.height/2);
             gameoverMuzik.play();            
         } else if(theScore === 10){
+            ctx.fillRect(0,0, canvas.width,canvas.height);
             displayStats(strikeResult);
         }        
         gameMusic.pause();        
@@ -232,15 +228,14 @@ animate()
 
 
 
-
 //control section-------------------------------------------
 window.addEventListener('load',()=>{
     btnStop.addEventListener('click',()=>{
         stopGame = true;
         location.reload();
-        if(!stopGame){
+        // if(!stopGame){
             
-        };                                   
+        // };                                   
     });
     // begginerBtn.addEventListener('click',()=>{
     //     if(stopGame===true){
