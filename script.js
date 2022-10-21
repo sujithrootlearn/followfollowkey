@@ -8,10 +8,10 @@ let miss = document.getElementById('miss');
 let stage = document.getElementById('stage');
 let gameInstruction = document.getElementById('gameInstruction');
 let btnStop = document.getElementById('btnStop');
-let lostCharMuzik = new Audio("/sounds/loose.mp3"), successMuzik = new Audio("/sounds/success.wav");
-let gameoverMuzik = new Audio("/sounds/gameover.wav"), gameoverImage = new Image();
-gameoverImage.src = ("/images/gameover.png")
-let gameMusic = new Audio("/sounds/uhhoo.mp3"), stageUPMusic = new Audio("/sounds/levelUP.mp3")
+let lostCharMuzik = new Audio("sounds/loose.mp3"), successMuzik = new Audio("sounds/success.wav");
+let gameoverMuzik = new Audio("sounds/gameover.wav"), gameoverImage = new Image();
+gameoverImage.src = ("images/gameover.png")
+let gameMusic = new Audio("sounds/uhhoo.mp3"), stageUPMusic = new Audio("sounds/levelUP.mp3")
 let keyboardChars = ['-','_','+',"=",'`','~','@','#','$','%','^','&','*','(',')','A','B','C','D','E','F','G','H','I','j','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9','0'];
 let uniqueCharacters = [], charSymbols = [], allKeys = [], colorChangeCounter = 100, killObjCounter = 300, missCount= 0, yellowCount = 0;
 let counter=0, objBall, theScore = 0, allChars = [], strikeResult = [], maxMissCount = 10; buttonWidth=200, buttonHeight=46, beginner=false, expert=false;
