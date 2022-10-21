@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="/style.css">
     
 
 </head>
@@ -18,12 +18,26 @@
     <div id="gameSection">
         <div id="canvasSection">
             <h1><span class="mark">!</span>Follow<span class="dot">.</span>Follow<span class="dot">.</span>Mee<span class="mark">!</span></h1>
-            <h5>SCORE:<span id="score">0</span> : MISS:<span id="miss">0</span></h5>
+            <h5>STAGE:<span id="stage">0</span> : SCORE:<span id="score">0</span> : MISS:<span id="miss">0</span></h5>
             <canvas id="canvas"></canvas> 
             <button id="btnStop">QUIT / REFRESH</button>           
-        </div> 
+        </div>
+        <section id="gameInstruction">
+            <p id="instruction">Game Instructions:</p>
+            <ul id="instructions">
+                <li>This is a 3 stage game, 0 ,1 and 3 with 2 different levels, Beginner and Expert.</li>
+                <li>Goal is to hit max score of 30 with no key miss to finish the game.</li>
+                <li>Bubbles in red indicates that they are going to disappear so catch them.</li>
+                <li>Max score of each stage is 10 with no key miss to move forward.</li>
+                <li>Remember that if any key miss do not hit max score. Wait for 'Yellow' bubbles.</li>
+                <li>Use 'Yellow' bubbles to make miss count to 0.</li>
+                <li>Never miss any Yellow bubble and follow the red bubbles immediately.</li>    
+            </ul>       
+    </section>
     </div>
 
+    
+  
         
     
     

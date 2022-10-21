@@ -16,6 +16,8 @@ body{
 #gameSection{    
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
     /* border: 2px solid whitesmoke;
     border-top-left-radius: 10px;
     border-bottom-right-radius: 10px; */
@@ -51,8 +53,20 @@ h5{
     font-size: 16px;
     color: white;
     margin: 0 0 5px;
-    width: 470px;
-    text-align: end;
+    /* width: 470px; */
+    text-align: center
+}
+
+h5 #stage{
+    color: aqua;
+}
+
+h5 #score{
+    color:yellow;
+}
+
+h5 #miss{
+    color: red;
 }
 
 
@@ -93,31 +107,68 @@ button:active{
     align-items: center;
 }
 
-#btnStop{    
-    margin-top: 15px;
-    padding: 4px;
-    background-color: rgb(251, 169, 182);
+#btnStop{
+    font-family: Comic Sans MS;    
+    margin: 15px 0 20px;
+    padding: 5px;
+    background-color: rgb(238, 132, 150);
     border-radius: 3px;
     font-weight: bold;
     border: 1px solid lightcyan;
 }
+ 
+
+#gameInstruction{
+    border: 1px solid rgba(230, 220, 220, 0.1);   
+ }
+
+ 
+
+#instruction{
+    font-family: Comic Sans MS;
+    font-size: 16px;
+    text-decoration: underline;
+    color: white;
+    margin-bottom: 8px;    
+}
+
+#instructions{
+    margin-top: 0;
+    font-family: Comic Sans MS;
+    font-size: 14px;    
+    color: white;
+}
 
 
-/* @media screen and (max-width:762px){
-    #gameSection{
-        flex-direction: column;
-        align-items: center;
+
+@media screen and (max-width:640px){
+    #instruction{
+        font-size: 15px;       
     }
-    #canvas{
-        width: 430px;
+    #instructions{
+        font-size: 12px;
     }
-    h2{
-        padding: 5px 25px;
-        font-size: 20px;
+    h1{
+        font-size: 18px;
+        padding: 10px 26px;
+        margin: 16px 0 34px; ;
     }
-    #play button{
-        padding: 12px;
-    }    
-    
-} */
+}
+
+@media screen and (max-width:540px){
+    #instruction{
+        font-size: 14px;       
+    }
+    #instructions{
+        font-size: 10px;
+    }
+    h1{
+        font-size: 16px;
+        padding: 8px 24px;
+        margin: 14px 0 32px; ;
+    }
+}
+
+
+
 
