@@ -81,7 +81,7 @@ function displayStats(arr){
         ctx.fillStyle = "white";
         ctx.font = "21px Comic Sans MS";
         ctx.fillText("Hey..You have got too much key miss counts...",canvas.width/2-225, canvas.height/2+225)
-    }else if(arr.length > 0){        
+    }else if(arr.length > 0 && missCount != 0){        
         ctx.fillStyle = "white";
         ctx.font = "20px Comic Sans MS";
         ctx.fillText("Hey...Following key/keys are with repeated miss :",canvas.width/2-230, canvas.height/2+225);
@@ -136,9 +136,8 @@ function showGameStartButton(){
                 allKeys = [];
                 animate();
             }
-        }
-
-    })
+        };
+    });
 };
 
 function getYellow(arr){
@@ -154,7 +153,6 @@ function getYellow(arr){
         };       
     };  
 };
-
 
 
 
