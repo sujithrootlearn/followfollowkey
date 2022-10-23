@@ -1,6 +1,6 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext("2d");
-canvas.width = 490, canvas.height = 570;
+canvas.width = 490, canvas.height = 580;
 let ballXCord = 100, ballYCord = 100; radius = 25; circleFillColor = "rgba(255,255,255)", textColor = "black";
 let requestAnimationID=0, stopGame=true;
 let score = document.getElementById('score');
@@ -15,7 +15,7 @@ let gameMusic = new Audio("sounds/uhhoo.mp3"), stageUPMusic = new Audio("sounds/
 let keyboardChars = ['-','_','+',"=",'`','~','@','#','$','%','^','&','*','(',')','A','B','C','D','E','F','G','H','I','j','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9','0'];
 let uniqueCharacters = [], charSymbols = [], allKeys = [], colorChangeCounter = 100, killObjCounter = 300, missCount= 0, yellowCount = 0;
 let counter=0, objBall, theScore = 0, allChars = [], strikeResult = [], maxMissCount = 10; buttonWidth=200, buttonHeight=46, beginner=false, expert=false;
-let  gameLevel=65, playBeginner = 71, playExpert = 68, gameover = false, maxBeginnerScore = 10, maxExpertScore = 10, currentStage = 0;
+let  gameLevel=65, playBeginner = 71, playExpert = 68, gameover = false, maxBeginnerScore = 10, maxExpertScore = 10, currentStage = 0, noKeyMiss=true;
 
 //class definition
 class Ball{
@@ -73,18 +73,21 @@ function sortDesc(arr){
             return 0;
         };
     });
-}
+};
+
+
+
 
 function displayStats(arr){    
     let theKey = "", xCord=canvas.width/2-250, yCord=canvas.height/2+258;
     if(missCount >= maxMissCount){
         ctx.fillStyle = "white";
         ctx.font = "21px Comic Sans MS";
-        ctx.fillText("Hey..You have got too much key miss counts...",canvas.width/2-225, canvas.height/2+225)
+        ctx.fillText("Hey..You have got too much key miss counts..",canvas.width/2-225, canvas.height/2+225)
     }else if(arr.length > 0 && missCount != 0){        
         ctx.fillStyle = "white";
         ctx.font = "20px Comic Sans MS";
-        ctx.fillText("Hey...Following key/keys are with repeated miss :",canvas.width/2-230, canvas.height/2+225);
+        ctx.fillText("Hey...Following key/keys are recorded as key miss :",canvas.width/2-230, canvas.height/2+225);
         for(let k=0; k<arr.length; k++){
             if(arr[k].missed > 0){
                 theKey = arr[k].key;               
@@ -93,13 +96,29 @@ function displayStats(arr){
                 ctx.fillText(`${theKey},` ,xCord,yCord);
             };
         }
-    }else{
+    }else if(noKeyMiss){
         ctx.shadowOffsetY = 0;
         ctx.fillStyle = "white";
         ctx.font = "24px Comic Sans MS";
-        ctx.fillText("Welldone !  You hit max score with no key miss.",canvas.width/2-250, canvas.height/2);
+        ctx.fillText("Welldone !!  You hit max score with no key miss.",canvas.width/2-250, canvas.height/2);
+    }else{
+        ctx.fillStyle = "white";
+        ctx.font = "20px Comic Sans MS";
+        ctx.fillText("Good job. You hit the target but with some key misses. :",canvas.width/2-235, canvas.height/2+225);
+        for(let k=0; k<arr.length; k++){
+            if(arr[k].missed > 0){
+                theKey = arr[k].key;               
+                xCord = xCord+20
+                ctx.font = "18px Comic Sans MS";
+                ctx.fillText(`${theKey},` ,xCord,yCord);
+            };
+        };
     }
-}
+};
+
+
+
+
 
 function showGameStartButton(){
     let rect1X = 40, rect1Y = 10, rect2X = buttonWidth+60, rect2Y = 10;
@@ -121,18 +140,19 @@ function showGameStartButton(){
                 stopGame = false;
                 gameLevel = playBeginner;
                 beginner = true;
-                canvas.width = 600;
-                canvas.height = 780;
+                canvas.width = 580;
+                canvas.height = 760;
                 allKeys = [];
                 animate();
             };
         }else if(mouseClickX >= rect2X && mouseClickX <= rect2X+buttonWidth){
             if(mouseClickY >= rect2Y && mouseClickY <= rect2Y+buttonHeight){
+                gameInstruction.style.display = "none"
                 stopGame = false;
                 gameLevel = playExpert;
                 expert = true;
-                canvas.width = 600;
-                canvas.height = 780;
+                canvas.width = 590;
+                canvas.height = 760;
                 allKeys = [];
                 animate();
             }
@@ -202,6 +222,7 @@ function animate(){
 
                 allKeys.splice(i,1);
                 missCount = missCount+1;
+                noKeyMiss = false;
                 
                 miss.innerText = missCount;
                 if(missCount >= maxMissCount){
